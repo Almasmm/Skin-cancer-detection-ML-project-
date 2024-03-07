@@ -6,10 +6,10 @@
 ## I. Introduction
 
 ### Problem
-Skin cancer poses a significant global health risk, emphasizing the importance of early detection for effective treatment. Traditional diagnostic methods relying on visual inspection can be subjective and inconsistent. This project aims to revolutionize skin cancer detection by developing a TensorFlow model utilizing transfer learning to improve diagnostic accuracy and efficiency.
+Skin cancer presents a significant global health risk, underscoring the need for early detection to facilitate effective treatment. Traditional diagnostic methods based on visual inspection can be subjective and inconsistent. This project aims to revolutionize skin cancer detection by developing a TensorFlow model utilizing transfer learning to improve diagnostic accuracy and efficiency.
 
 ### Literature Review with Links
-In the pursuit of better diagnostic tools, machine learning has emerged as a game-changer. Studies, such as those by [Kim et al.](https://doi.org/10.1186/s12880-022-00793-7) and [Nancy et al.](https://doi.org/10.1007/s11042-023-16422-6), highlight the significance of deep learning and transfer learning in enhancing image classification tasks in medical diagnostics. Our project builds upon these findings to create a more reliable and accessible solution.
+In the pursuit of improved diagnostic tools, machine learning has emerged as a transformative force. Studies by Kim et al. and Nancy et al. highlight the significance of deep learning and transfer learning in enhancing image classification tasks in medical diagnostics. This project builds upon these findings to create a more reliable and accessible solution.
 
 ### Current Work
 Our approach harnesses the power of pre-trained models, adapting them through transfer learning to recognize patterns indicative of malignant or benign skin lesions. This method not only accelerates the training process but also promises to deliver superior diagnostic capabilities.
@@ -19,7 +19,8 @@ Our approach harnesses the power of pre-trained models, adapting them through tr
 ### Information about the Data
 The dataset comprises a diverse collection of skin lesion images, meticulously labeled as malignant or benign. Through exploratory data analysis, we've uncovered valuable insights into the dataset’s characteristics, ensuring our model is trained on a well-rounded and representative sample.
 
-![Our Dataset](https://github.com/Aniyear/FINAL/blob/main/images/2.jpg)
+![Our Dataset](https://github.com/Aniyear/FINAL/blob/main/images/1.jpg)
+![Our Dataset2](https://github.com/Aniyear/FINAL/blob/main/images/2.jpg)
 ```
 Train Dataset:
 malignant    900
@@ -34,16 +35,43 @@ benign       150
 malignant    148
 
 ```
-![Our Dataset2](https://github.com/Aniyear/FINAL/blob/main/images/photo_2024-03-06_21-16-33.jpg)
 
 
 ### Description of the ML/DL Models
 At the heart of our solution is TensorFlow, which we’ve employed to construct and fine-tune our machine learning models. The integration of transfer learning techniques allows us to utilize the robust feature extraction capabilities of established models, tailoring them to our specific use case.
+```
+import tensorflow_hub as hub
+
+module_url = "https://tfhub.dev/google/tf2-preview/inception_v3/feature_vector/4"
+m = tf.keras.Sequential([
+    hub.KerasLayer(module_url, output_shape=[2048], trainable=False),
+    tf.keras.layers.Dense(1, activation="sigmoid")
+])
+
+m.build([None, IMG_HEIGHT, IMG_WIDTH, 3])
+
+m.compile(loss="binary_crossentropy", optimizer="adam", metrics=["accuracy"])
+
+m.summary()
+```
+We adjusted the dimensions of all images to (224, 224, 3) to align with the input requirements of the InceptionV3 architecture. To leverage transfer learning, we utilized the TensorFlow Hub library to import and incorporate the InceptionV3 architecture, along with its pre-trained weights from ImageNet. By setting the 'trainable' parameter to False, we ensured that the pre-trained weights remain fixed during our training process. Additionally, we appended a final output layer comprising a single unit. This layer is designed to produce an output value ranging between 0 and 1. A value closer to 0 signifies a prediction of "benign," while a value closer to 1 indicates a prediction of "malignant."
+
+KerasLayer (Transfer Learning from InceptionV3):
+Description: This layer uses transfer learning from the InceptionV3 architecture via TensorFlow Hub. It takes the preprocessed input images of size (224, 224, 3) and extracts features from them. The output shape is (None, 2048), meaning that each input image is represented by a feature vector of length 2048.
+
+Dense (Final Output Layer):
+Description: This layer is the final output layer of the model. It has 1 unit, which outputs a single scalar value representing the predicted probability of the input image belonging to the "malignant" class. The output is a value between 0 and 1, where values close to 0 indicate a prediction of "benign" and values close to 1 indicate a prediction of "malignant".
 
 ## III. Results
 
 ### Results with Tables, Pictures, and Interesting Numbers
-![Changes](https://github.com/Aniyear/FINAL/blob/main/images/1.jpg)
+![Changes](https://github.com/Aniyear/FINAL/blob/main/images/3.jpg)
+
+![Changes](https://github.com/Aniyear/FINAL/blob/main/images/4.jpg)
+
+![Changes](https://github.com/Aniyear/FINAL/blob/main/images/5.jpg)
+
+![Changes](https://github.com/Aniyear/FINAL/blob/main/images/6.jpg)
 
 ## IV. Discussion
 
